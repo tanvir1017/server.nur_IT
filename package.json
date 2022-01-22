@@ -1,0 +1,28 @@
+{
+  "name": "server.nur_it",
+  "version": "1.0.0",
+  "description": "��#\u0000 \u0000s\u0000e\u0000r\u0000v\u0000e\u0000r\u0000.\u0000n\u0000u\u0000r\u0000_\u0000I\u0000T\u0000\r\u0000 \u0000",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "start-dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tanvir1017/server.nur_IT.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tanvir1017/server.nur_IT/issues"
+  },
+  "homepage": "https://github.com/tanvir1017/server.nur_IT#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^14.2.0",
+    "express": "^4.17.2",
+    "mongodb": "^4.3.1"
+  }
+}
