@@ -63,6 +63,14 @@ async function run() {
       const result = await findEnrolledCourse.toArray();
       res.json(result);
     });
+
+    // Delete user order
+    app.delete("/enrollCourse/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const cart = await enrolledCourseCollection.deleteOne(query);
+      res.json(cart);
+    });
   } finally {
     // await client.close();
   }
