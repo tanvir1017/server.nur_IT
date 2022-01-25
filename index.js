@@ -22,6 +22,7 @@ async function run() {
     await client.connect();
     const database = client.db("nur_it_server");
     const courseCollection = database.collection("Courses");
+    const enrolledCourseCollection = database.collection("enrollCourse");
 
     // get db from mongodb
     app.get("/courses", async (req, res) => {
@@ -41,6 +42,26 @@ async function run() {
       const courseContent = req.body;
       const courseInsert = await courseCollection.insertOne(courseContent);
       res.json(courseInsert);
+    });
+    // enroll course
+    app.post("/enrollCourse", async (req, res) => {
+      const enrolledCourse = req.body;
+      const result = await enrolledCourseCollection.insertOne(enrolledCourse);
+      res.json(result);
+    });
+    // See all enrolled course {admin}
+    app.get("/enrollCourse", async (req, res) => {
+      const findEnrolledCourse = enrolledCourseCollection.find({});
+      const result = await findEnrolledCourse.toArray();
+      res.json(result);
+    });
+    // See all enrolled course {single user}
+    app.get("/email", async (req, res) => {
+      const email = req.query.email;
+      const query = { email: email };
+      const findEnrolledCourse = enrolledCourseCollection.find(query);
+      const result = await findEnrolledCourse.toArray();
+      res.json(result);
     });
   } finally {
     // await client.close();
