@@ -23,6 +23,7 @@ async function run() {
     const database = client.db("nur_it_server");
     const courseCollection = database.collection("Courses");
     const enrolledCourseCollection = database.collection("enrollCourse");
+    const usersCollection = database.collection("users");
 
     // get db from mongodb
     app.get("/courses", async (req, res) => {
@@ -70,6 +71,26 @@ async function run() {
       const query = { _id: ObjectId(id) };
       const cart = await enrolledCourseCollection.deleteOne(query);
       res.json(cart);
+    });
+
+    // makeAdmin data
+    app.post("/users", async (req, res) => {
+      const body = req.body;
+      const result = await usersCollection.insertOne(body);
+      res.json(result);
+    });
+    // makeadin data with googl
+    app.put("/users", async (req, res) => {
+      const user = req.body;
+      const filter = { email: user.email };
+      const options = { upsert: true };
+      const updateDoc = { $set: user };
+      const result = await usersCollection.updateOne(
+        filter,
+        updateDoc,
+        options
+      );
+      res.json(result);
     });
   } finally {
     // await client.close();
