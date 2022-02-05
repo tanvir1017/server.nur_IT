@@ -15,7 +15,8 @@ const client = new MongoClient(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
-console.log(uri);
+// DB_USER = nur_it_server;
+// DB_PASS = thiI1ABU8fwPAqnu;
 
 async function run() {
   try {
