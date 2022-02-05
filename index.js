@@ -15,8 +15,6 @@ const client = new MongoClient(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
-// DB_USER = nur_it_server;
-// DB_PASS = thiI1ABU8fwPAqnu;
 
 async function run() {
   try {
@@ -26,25 +24,27 @@ async function run() {
     const enrolledCourseCollection = database.collection("enrollCourse");
     const usersCollection = database.collection("users");
 
+    // Post A New Course By Admin
+    app.post("/courses", async (req, res) => {
+      const courseContent = req.body;
+      const result = await courseCollection.insertOne(courseContent);
+      res.json(result);
+    });
     // get db from mongodb
     app.get("/courses", async (req, res) => {
       const findCourse = courseCollection.find({});
       const courseArray = await findCourse.toArray();
       res.json(courseArray);
     });
-    // get db from mongodb
-    app.get("/course/:id", async (req, res) => {
+
+    // Delete courses
+    app.delete("/course/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
-      const findCourse = await courseCollection.findOne(query);
-      res.json(findCourse);
+      const result = await courseCollection.deleteOne(query);
+      res.json(result);
     });
-    // post db from mongodb
-    app.post("/courses", async (req, res) => {
-      const courseContent = req.body;
-      const courseInsert = await courseCollection.insertOne(courseContent);
-      res.json(courseInsert);
-    });
+
     // enroll course
     app.post("/enrollCourse", async (req, res) => {
       const enrolledCourse = req.body;
@@ -89,6 +89,53 @@ async function run() {
       const result = await usersCollection.updateOne(
         filter,
         updateDoc,
+        options
+      );
+      res.json(result);
+    });
+    // get db from mongodb
+    app.get("/courses/mangeCourses/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const findCourse = await courseCollection.findOne(query);
+      res.json(findCourse);
+    });
+    // Update any course by admin
+    app.put("/courses/mangeCourses/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const content = req.body;
+      const options = { upsert: true };
+      const updateContent = {
+        $set: {
+          subTitle: content.subTitle,
+          title: content.title,
+          courseCover: content.courseCover,
+          certificateImg: content.certificateImg,
+          fee: content.fee,
+          discountFee: content.discountFee,
+          quize: content.quize,
+          lession: content.lession,
+          topic: content.topic,
+          video: content.video,
+          techingListTitle: content.techingListTitle,
+          techingList1: content.techingList1,
+          techingList2: content.techingList2,
+          techingList3: content.techingList3,
+          techingList4: content.techingList4,
+          techingList5: content.techingList5,
+          techingList6: content.techingList6,
+          techingList7: content.techingList7,
+          techingList8: content.techingList8,
+          desc: content.desc,
+          requirementDesc: content.requirementDesc,
+          whoCanBuyTitle: content.whoCanBuyTitle,
+          careerDesc: content.careerDesc,
+        },
+      };
+      const result = await courseCollection.updateOne(
+        query,
+        updateContent,
         options
       );
       res.json(result);
