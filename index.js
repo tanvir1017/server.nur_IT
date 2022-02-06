@@ -131,6 +131,10 @@ async function run() {
           requirementDesc: content.requirementDesc,
           whoCanBuyTitle: content.whoCanBuyTitle,
           careerDesc: content.careerDesc,
+          instructorName: content.instructorName,
+          instructorSpecialty: content.instructorSpecialty,
+          instructorIntroduction: content.instructorIntroduction,
+          instructorRole: content.instructorRole,
         },
       };
       const result = await courseCollection.updateOne(
