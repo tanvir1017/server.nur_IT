@@ -23,6 +23,7 @@ async function run() {
     const courseCollection = database.collection("Courses");
     const enrolledCourseCollection = database.collection("enrollCourse");
     const usersCollection = database.collection("users");
+    const commentsCollection = database.collection("comments");
 
     // Post A New Course By Admin
     app.post("/courses", async (req, res) => {
@@ -80,7 +81,7 @@ async function run() {
       const result = await usersCollection.insertOne(body);
       res.json(result);
     });
-    // makeadin data with googl
+    // makeadin data with google
     app.put("/users", async (req, res) => {
       const user = req.body;
       const filter = { email: user.email };
@@ -142,6 +143,35 @@ async function run() {
         updateContent,
         options
       );
+      res.json(result);
+    });
+    // Make Admin
+    app.put("/users/admin", async (req, res) => {
+      const adminBody = req.body;
+
+      const query = { email: adminBody.email };
+      const updateDoc = { $set: { role: "admin" } };
+      const result = await usersCollection.updateOne(query, updateDoc);
+
+      res.json(result);
+    });
+    // check admin status
+    app.get("/users/:email", async (req, res) => {
+      const email = req.params.email;
+      const query = { email: email };
+      const user = await usersCollection.findOne(query);
+      let isAdmin = false;
+      if (user?.role === "admin") {
+        isAdmin = true;
+      }
+
+      res.json({ admin: isAdmin });
+    });
+
+    // Comment Push to db
+    app.post("/comments", async (req, res) => {
+      const body = req.body;
+      const result = await commentsCollection.insertOne(body);
       res.json(result);
     });
   } finally {
