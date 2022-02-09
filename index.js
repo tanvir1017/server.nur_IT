@@ -24,6 +24,7 @@ async function run() {
     const enrolledCourseCollection = database.collection("enrollCourse");
     const usersCollection = database.collection("users");
     const commentsCollection = database.collection("comments");
+    const testimonialsCollection = database.collection("testimonial");
 
     // Post A New Course By Admin
     app.post("/courses", async (req, res) => {
@@ -172,6 +173,21 @@ async function run() {
     app.post("/comments", async (req, res) => {
       const body = req.body;
       const result = await commentsCollection.insertOne(body);
+      res.json(result);
+    });
+
+    // testimonial get to db
+    app.get("/testimonial", async (req, res) => {
+      const cursor = testimonialsCollection.find({});
+      const result = await cursor.toArray();
+      res.json(result);
+    });
+    // testimonial post to db
+    app.post("/testimonial", async (req, res) => {
+      const cursor = req.body;
+      console.log(cursor);
+      const result = await testimonialsCollection.insertOne(cursor);
+      console.log(result);
       res.json(result);
     });
   } finally {
