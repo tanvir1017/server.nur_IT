@@ -1,6 +1,7 @@
 const cors = require("cors");
 const { MongoClient } = require("mongodb");
 const express = require("express");
+const { query } = require("express");
 const ObjectId = require("mongodb").ObjectId;
 const app = express();
 require("dotenv").config();
@@ -34,9 +35,20 @@ async function run() {
     });
     // get db from mongodb
     app.get("/courses", async (req, res) => {
-      const findCourse = courseCollection.find({});
-      const courseArray = await findCourse.toArray();
-      res.json(courseArray);
+      const search = req.query.course;
+      const tag = { tag: search };
+      console.log(tag);
+      let findCourse;
+      if (search) {
+        findCourse = courseCollection.find(tag);
+        const courseArray = await findCourse.toArray();
+        console.log(courseArray);
+        res.json(courseArray);
+      } else {
+        findCourse = courseCollection.find({});
+        const courseArray = await findCourse.toArray();
+        res.json(courseArray);
+      }
     });
 
     // Delete courses
@@ -63,6 +75,7 @@ async function run() {
     app.get("/email", async (req, res) => {
       const email = req.query.email;
       const query = { email: email };
+      console.log(query);
       const findEnrolledCourse = enrolledCourseCollection.find(query);
       const result = await findEnrolledCourse.toArray();
       res.json(result);
