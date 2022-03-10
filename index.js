@@ -120,7 +120,7 @@ async function run() {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
       const content = req.body;
-      const options = { upsert: true };
+
       const updateContent = {
         $set: {
           subTitle: content.subTitle,
@@ -152,6 +152,7 @@ async function run() {
           instructorRole: content.instructorRole,
         },
       };
+      const options = { upsert: true };
       const result = await courseCollection.updateOne(
         query,
         updateContent,
@@ -162,11 +163,9 @@ async function run() {
     // Make Admin
     app.put("/users/admin", async (req, res) => {
       const adminBody = req.body;
-
       const query = { email: adminBody.email };
       const updateDoc = { $set: { role: "admin" } };
       const result = await usersCollection.updateOne(query, updateDoc);
-
       res.json(result);
     });
     // check admin status
@@ -178,8 +177,34 @@ async function run() {
       if (user?.role === "admin") {
         isAdmin = true;
       }
-
       res.json({ admin: isAdmin });
+    });
+
+    // get all users
+    app.get("/update-users/:email", async (req, res) => {
+      const email = req.params.email;
+      const cursor = usersCollection.find({ email });
+      const result = await cursor.toArray();
+      res.json(result);
+    });
+    // update users
+    app.put("/update-users/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const body = req.body;
+      const updateContent = {
+        $set: {
+          displayName: body.displayName,
+          phone: body.phone,
+        },
+      };
+      const options = { upsert: true };
+      const result = await usersCollection.updateOne(
+        query,
+        updateContent,
+        options
+      );
+      res.json(result);
     });
 
     // Comment Push to db
