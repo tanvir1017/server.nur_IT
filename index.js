@@ -114,6 +114,7 @@ async function run() {
         $set: {
           subTitle: content.subTitle,
           title: content.title,
+          tag: content.tag,
           courseCover: content.courseCover,
           certificateImg: content.certificateImg,
           fee: content.fee,
@@ -212,9 +213,9 @@ async function run() {
     // testimonial post to db
     app.post("/testimonial", async (req, res) => {
       const cursor = req.body;
-      console.log(cursor);
+
       const result = await testimonialsCollection.insertOne(cursor);
-      console.log(result);
+
       res.json(result);
     });
   } finally {
