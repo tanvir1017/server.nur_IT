@@ -33,22 +33,11 @@ async function run() {
       const result = await courseCollection.insertOne(courseContent);
       res.json(result);
     });
-    // get db from mongodb
+
     app.get("/courses", async (req, res) => {
-      const search = req.query.course;
-      const tag = { tag: search };
-      console.log(tag);
-      let findCourse;
-      if (search) {
-        findCourse = courseCollection.find(tag);
-        const courseArray = await findCourse.toArray();
-        console.log(courseArray);
-        res.json(courseArray);
-      } else {
-        findCourse = courseCollection.find({});
-        const courseArray = await findCourse.toArray();
-        res.json(courseArray);
-      }
+      let findCourse = courseCollection.find({});
+      const courseArray = await findCourse.toArray();
+      res.json(courseArray);
     });
 
     // Delete courses
