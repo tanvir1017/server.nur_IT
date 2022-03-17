@@ -106,10 +106,9 @@ async function run() {
     });
     // Update any course by admin
     app.put("/courses/mangeCourses/:id", async (req, res) => {
+      const content = req.body;
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
-      const content = req.body;
-
       const updateContent = {
         $set: {
           subTitle: content.subTitle,
@@ -170,7 +169,7 @@ async function run() {
       res.json({ admin: isAdmin });
     });
 
-    // get all users
+    // get user by email
     app.get("/update-users/:email", async (req, res) => {
       const email = req.params.email;
       const cursor = usersCollection.find({ email });
@@ -178,22 +177,24 @@ async function run() {
       res.json(result);
     });
     // update users
-    app.put("/update-users/:id", async (req, res) => {
-      const id = req.params.id;
-      const query = { _id: ObjectId(id) };
+    app.put("/update-users/:email", async (req, res) => {
       const body = req.body;
+      const query = { email: req.body.email };
+      console.log(query, "email");
       const updateContent = {
         $set: {
           displayName: body.displayName,
           phone: body.phone,
         },
       };
+      console.log(updateContent, "updateContent");
       const options = { upsert: true };
       const result = await usersCollection.updateOne(
         query,
         updateContent,
         options
       );
+      console.log(result);
       res.json(result);
     });
 
