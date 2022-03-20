@@ -179,12 +179,13 @@ async function run() {
     // update users
     app.put("/update-users/:email", async (req, res) => {
       const body = req.body;
+      console.log("body", body);
       const query = { email: req.body.email };
-      console.log(query, "email");
       const updateContent = {
         $set: {
           displayName: body.displayName,
           phone: body.phone,
+          photoURL: body.photoURL,
         },
       };
       console.log(updateContent, "updateContent");
