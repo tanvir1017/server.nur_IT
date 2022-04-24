@@ -34,6 +34,9 @@ async function run() {
       res.json(result);
     });
 
+    /* DB_USER = nur_it_server; */
+    /* DB_PASS = thiI1ABU8fwPAqnu; */
+
     app.get("/courses", async (req, res) => {
       let findCourse = courseCollection.find({});
       const courseArray = await findCourse.toArray();
