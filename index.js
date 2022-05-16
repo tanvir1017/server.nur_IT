@@ -26,6 +26,7 @@ async function run() {
     const usersCollection = database.collection("users");
     const commentsCollection = database.collection("comments");
     const testimonialsCollection = database.collection("testimonial");
+    const blogsCollection = database.collection("blogs");
 
     // Post A New Course By Admin
     app.post("/courses", async (req, res) => {
@@ -33,7 +34,6 @@ async function run() {
       const result = await courseCollection.insertOne(courseContent);
       res.json(result);
     });
-
     /* DB_USER = nur_it_server; */
     /* DB_PASS = thiI1ABU8fwPAqnu; */
 
@@ -182,7 +182,6 @@ async function run() {
     // update users
     app.put("/update-users/:email", async (req, res) => {
       const body = req.body;
-      console.log("body", body);
       const query = { email: req.body.email };
       const updateContent = {
         $set: {
@@ -191,14 +190,12 @@ async function run() {
           photoURL: body.photoURL,
         },
       };
-      console.log(updateContent, "updateContent");
       const options = { upsert: true };
       const result = await usersCollection.updateOne(
         query,
         updateContent,
         options
       );
-      console.log(result);
       res.json(result);
     });
 
@@ -223,6 +220,22 @@ async function run() {
 
       res.json(result);
     });
+
+    /* Blog post section */
+    // Blog post to db
+    app.get("/blogs", async (req, res) => {
+      const cursor = blogsCollection.find({});
+      const result = await cursor.toArray();
+      res.json(result);
+    });
+    app.post("/blogs", async (req, res) => {
+      const body = req.body;
+      console.log(body);
+      const result = await blogsCollection.insertOne(body);
+      console.log(result);
+      res.json(result);
+    });
+    /* Blog post section */
   } finally {
     // await client.close();
   }
