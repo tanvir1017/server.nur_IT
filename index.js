@@ -232,8 +232,13 @@ async function run() {
       const body = req.body;
       console.log(body);
       const result = await blogsCollection.insertOne(body);
-      console.log(result);
       res.json(result);
+    });
+    app.get("/blogs/blogs-details/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const findBlogs = await blogsCollection.findOne(query);
+      res.json(findBlogs);
     });
     /* Blog post section */
   } finally {
