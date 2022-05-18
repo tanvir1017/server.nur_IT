@@ -67,7 +67,6 @@ async function run() {
     app.get("/email", async (req, res) => {
       const email = req.query.email;
       const query = { email: email };
-      console.log(query);
       const findEnrolledCourse = enrolledCourseCollection.find(query);
       const result = await findEnrolledCourse.toArray();
       res.json(result);
@@ -228,17 +227,58 @@ async function run() {
       const result = await cursor.toArray();
       res.json(result);
     });
+    // POST A BLOG
     app.post("/blogs", async (req, res) => {
       const body = req.body;
-      console.log(body);
       const result = await blogsCollection.insertOne(body);
       res.json(result);
     });
+    // GET BLOG BY ID
     app.get("/blogs/blogs-details/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
       const findBlogs = await blogsCollection.findOne(query);
       res.json(findBlogs);
+    });
+    // DELETE BLOG BY ID
+    app.delete("/blogs/delete/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await blogsCollection.deleteOne(query);
+      res.json(result);
+    });
+    // UPDATE BLOG BY ID
+    app.put("/blogs/manage-blog/:id", async (req, res) => {
+      const content = req.body;
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const updateContent = {
+        $set: {
+          left_side_p_img: content.left_side_p_img,
+          right_side_p_img: content.right_side_p_img,
+          blog_paragraph_last: content.blog_paragraph_last,
+          left_side_paragraph: content.left_side_paragraph,
+          right_side_paragraph: content.right_side_paragraph,
+          left_side_heading_title: content.left_side_heading_title,
+          right_side_heading_title: content.right_side_heading_title,
+          under_the_text_of_cover_img_p: content.under_the_text_of_cover_img_p,
+          cover_image_about_topic: content.cover_image_about_topic,
+          blog_paragraph: content.blog_paragraph,
+          sort_description: content.sort_description,
+          cover_image: content.cover_image,
+          card_image: content.card_image,
+          author: content.author,
+          tag: content.tag,
+          title: content.title,
+        },
+      };
+      const options = { upsert: true };
+      const result = await blogsCollection.updateOne(
+        query,
+        updateContent,
+        options
+      );
+      res.json(result);
     });
     /* Blog post section */
   } finally {
