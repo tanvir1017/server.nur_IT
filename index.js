@@ -281,6 +281,13 @@ async function run() {
       res.json(result);
     });
     /* Blog post section */
+    // DASHBOARD USER
+    app.get("/users", async (req, res) => {
+      const cursor = usersCollection.find({});
+      const result = await cursor.toArray();
+      res.json(result);
+    });
+    // DASHBOARD USER
   } finally {
     // await client.close();
   }
