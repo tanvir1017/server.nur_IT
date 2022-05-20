@@ -1,7 +1,6 @@
 const cors = require("cors");
 const { MongoClient } = require("mongodb");
 const express = require("express");
-const { query } = require("express");
 const ObjectId = require("mongodb").ObjectId;
 const app = express();
 require("dotenv").config();
