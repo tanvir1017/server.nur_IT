@@ -11,7 +11,7 @@ const port = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-const uri = `mongodb+srv://nur_it_server:thiI1ABU8fwPAqnu@cluster0.14uaf.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.14uaf.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -34,8 +34,6 @@ async function run() {
       const result = await courseCollection.insertOne(courseContent);
       res.json(result);
     });
-    /* DB_USER = nur_it_server; */
-    /* DB_PASS = thiI1ABU8fwPAqnu; */
 
     app.get("/courses", async (req, res) => {
       let findCourse = courseCollection.find({});
