@@ -218,11 +218,23 @@ async function run() {
     });
 
     /* Blog post section */
-    // Blog post to db
+    // Get all Blog
     app.get("/blogs", async (req, res) => {
+      console.log(req.query)
       const cursor = blogsCollection.find({});
-      const result = await cursor.toArray();
-      res.json(result);
+      const page = req.query.page;
+      const size = Number(req.query.size);
+      let result;
+      const count = await cursor.count()
+      if (page) {
+        result = await cursor
+          .skip(page * size)
+          .limit(size)
+          .toArray();
+      } else {
+        result = await cursor.toArray();
+      }
+      res.json({count, result});
     });
     // POST A BLOG
     app.post("/blogs", async (req, res) => {
