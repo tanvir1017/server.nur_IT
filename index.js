@@ -1,9 +1,11 @@
+require("dotenv").config();
 const cors = require("cors");
 const { MongoClient } = require("mongodb");
 const express = require("express");
 const ObjectId = require("mongodb").ObjectId;
+// stripe
+const stripe = require("stripe")(process.env.STRIPE_SECRET);
 const app = express();
-require("dotenv").config();
 const port = process.env.PORT || 5000;
 
 // Middleware
@@ -306,6 +308,19 @@ async function run() {
       const findCourse = await courseCollection.findOne(query);
       res.json(findCourse);
     });
+
+    app.post('/create-payment-intent', async (req, res) => {
+      const paymentInfo = req.body;
+      const convertAmount = paymentInfo.fee * 100;
+      const paymentIntent = await stripe.paymentIntents.create({
+        currency: "BDT",
+        amount: convertAmount,
+        payment_method_types: ['card']
+      })
+      res.json({
+        clientSecret : paymentIntent.client_secret
+      })
+    })
     // DASHBOARD USER
   } finally {
     // await client.close();
