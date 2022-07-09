@@ -131,6 +131,7 @@ async function run() {
           techingList7: content.techingList7,
           techingList8: content.techingList8,
           desc: content.desc,
+          category: content.category,
           requirementDesc: content.requirementDesc,
           whoCanBuyTitle: content.whoCanBuyTitle,
           careerDesc: content.careerDesc,
@@ -220,12 +221,12 @@ async function run() {
     /* Blog post section */
     // Get all Blog
     app.get("/blogs", async (req, res) => {
-      console.log(req.query)
+      console.log(req.query);
       const cursor = blogsCollection.find({});
       const page = req.query.page;
       const size = Number(req.query.size);
       let result;
-      const count = await cursor.count()
+      const count = await cursor.count();
       if (page) {
         result = await cursor
           .skip(page * size)
@@ -234,7 +235,7 @@ async function run() {
       } else {
         result = await cursor.toArray();
       }
-      res.json({count, result});
+      res.json({ count, result });
     });
     // POST A BLOG
     app.post("/blogs", async (req, res) => {
@@ -295,6 +296,15 @@ async function run() {
       const cursor = usersCollection.find({});
       const result = await cursor.toArray();
       res.json(result);
+    });
+
+    // payment getway, data load by id
+    // get db from mongodb
+    app.get("/course/:paymentId", async (req, res) => {
+      const id = req.params.paymentId;
+      const query = { _id: ObjectId(id) };
+      const findCourse = await courseCollection.findOne(query);
+      res.json(findCourse);
     });
     // DASHBOARD USER
   } finally {
