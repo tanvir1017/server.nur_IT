@@ -223,7 +223,6 @@ async function run() {
     /* Blog post section */
     // Get all Blog
     app.get("/blogs", async (req, res) => {
-      console.log(req.query);
       const cursor = blogsCollection.find({});
       const page = req.query.page;
       const size = Number(req.query.size);
@@ -266,22 +265,12 @@ async function run() {
       const query = { _id: ObjectId(id) };
       const updateContent = {
         $set: {
-          left_side_p_img: content.left_side_p_img,
-          right_side_p_img: content.right_side_p_img,
-          blog_paragraph_last: content.blog_paragraph_last,
-          left_side_paragraph: content.left_side_paragraph,
-          right_side_paragraph: content.right_side_paragraph,
-          left_side_heading_title: content.left_side_heading_title,
-          right_side_heading_title: content.right_side_heading_title,
-          under_the_text_of_cover_img_p: content.under_the_text_of_cover_img_p,
-          cover_image_about_topic: content.cover_image_about_topic,
-          blog_paragraph: content.blog_paragraph,
-          sort_description: content.sort_description,
-          cover_image: content.cover_image,
           card_image: content.card_image,
           author: content.author,
-          tag: content.tag,
+          tag: content?.tag || "",
           title: content.title,
+          html: content.html,
+          sort_description: content.sort_description,
         },
       };
       const options = { upsert: true };
